@@ -45,9 +45,6 @@ class SocketController extends GetxController {
           listIp.add(element);
         }
       }
-      // final jsonString = data.replaceFirst('detail:', '');
-      // Map<String, dynamic> jsonObject = jsonDecode(jsonString);
-      // deviceInfor.value = jsonObject;
     });
 
     // lắng nghe sự kiện từ xe command
@@ -75,10 +72,20 @@ class SocketController extends GetxController {
 
     socket.on("join", (data) {
       print('join: $data');
+      // Find the index of the opening curly brace '{' after 'join:'
+      var startIndex = data.indexOf('{');
+      // Find the index of the closing curly brace '}' from the end of the string
+      var endIndex = data.lastIndexOf('}') + 1;
+
+      // Extract the substring containing only the JSON object
+      var jsonObjectString = data.substring(startIndex, endIndex);
+
+      // Parse the JSON string to a Dart object (Map)
+      Map<String, dynamic> jsonObject = jsonDecode(jsonObjectString);
+      deviceInfor.value = jsonObject;
     });
 
     socket.on("frame", (data) {
-      print(data);
       base64Image.value = data;
       // print('frame2: ${data.split(":")[1]}');
     });
