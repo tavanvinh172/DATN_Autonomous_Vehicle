@@ -27,10 +27,10 @@ class MainView extends BaseView<MainController> {
   @override
   PreferredSizeWidget? appBar(BuildContext context) => null;
 
-  final WidgetStateProperty<Icon?> thumbIcon =
-      WidgetStateProperty.resolveWith<Icon?>(
-    (Set<WidgetState> states) {
-      if (states.contains(WidgetState.selected)) {
+  final MaterialStateProperty<Icon?> thumbIcon =
+      MaterialStateProperty.resolveWith<Icon?>(
+    (Set<MaterialState> states) {
+      if (states.contains(MaterialState.selected)) {
         return const Icon(Icons.wifi_tethering_sharp);
       }
       return const Icon(Icons.close);
@@ -206,39 +206,46 @@ class MainView extends BaseView<MainController> {
                                 child: Column(
                                   children: [
                                     TextFieldWithTitle(
-                                      textEditingController:
-                                          TextEditingController(text: ""),
+                                      textEditingController: controller
+                                          .homeController.ipAddressController,
                                       title: 'Địa chỉ IP',
                                     ),
                                   ],
                                 )),
-                            confirm: Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // if (nameDeviceController.text.isNotEmpty &&
-                                  //     ipAddressController.text.isNotEmpty &&
-                                  //     portController.text.isNotEmpty) {
-                                  //   objectbox.editDevice(id, nameDeviceController.text,
-                                  //       ipAddressController.text, portController.text);
-                                  // }
-                                },
-                                style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6.0),
-                                      side: const BorderSide(
-                                        color: AppColors.colorDark,
-                                      ),
+                            confirm: ElevatedButton(
+                              onPressed: () {
+                                // if (nameDeviceController.text.isNotEmpty &&
+                                //     ipAddressController.text.isNotEmpty &&
+                                //     portController.text.isNotEmpty) {
+                                //   objectbox.editDevice(id, nameDeviceController.text,
+                                //       ipAddressController.text, portController.text);
+                                // }
+                                if (controller.homeController
+                                    .ipAddressController.text.isNotEmpty) {
+                                  objectbox.addDevice(
+                                      '',
+                                      controller.homeController
+                                          .ipAddressController.text,
+                                      '5000');
+                                  Get.back();
+                                }
+                              },
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    side: const BorderSide(
+                                      color: AppColors.colorDark,
                                     ),
                                   ),
                                 ),
-                                child: const Text("Thêm mới"),
                               ),
+                              child: const Text("Thêm mới"),
                             ),
                             cancel: ElevatedButton(
                                 style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
+                                  shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6.0),
@@ -254,7 +261,7 @@ class MainView extends BaseView<MainController> {
                         },
                         style: ButtonStyle(
                           shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6.0),
                               side: const BorderSide(
@@ -381,7 +388,8 @@ class MainView extends BaseView<MainController> {
               controller.pingStatus.value = !controller.pingStatus.value;
               if (controller.scanDetection.value) {
                 await socketController.scanVehicles();
-                Timer(const Duration(seconds: 3), () {
+                Timer(const Duration(seconds: 2), () {
+                  print('listId: ${socketController.listIp}');
                   if (socketController.listIp.isNotEmpty) {
                     showToastSuccessMessage("Thông báo",
                         "Dò được ${socketController.listIp.length} thiết bị");
@@ -446,7 +454,7 @@ class MainView extends BaseView<MainController> {
               () {
                 final devices = objectbox.getAllDevices();
                 if (devices.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: Text("Chưa có dữ liệu"));
                 }
                 return ListView.separated(
                   itemCount: objectbox.getAllDevices().length,

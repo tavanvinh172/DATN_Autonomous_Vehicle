@@ -18,9 +18,9 @@ class ObjectBox extends GetxController {
     _deviceBox = Box<Device>(_store);
 
     // Add some demo data if the box is empty.
-    if (_deviceBox.isEmpty()) {
-      _putDemoData();
-    }
+    // if (_deviceBox.isEmpty()) {
+    //   _putDemoData();
+    // }
   }
 
   /// Create an instance of ObjectBox to use throughout the app.

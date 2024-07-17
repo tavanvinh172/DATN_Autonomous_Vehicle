@@ -18,7 +18,6 @@ class BottomNavBar extends StatelessWidget with BaseWidgetMixin {
 
   final OnBottomNavItemSelected onItemSelected;
   final navController = BottomNavController();
-  final Key bottomNavKey = GlobalKey();
   final Color selectedItemColor = AppColors.colorPrimary;
   final Color unselectedItemColor = Colors.black;
 
@@ -28,7 +27,6 @@ class BottomNavBar extends StatelessWidget with BaseWidgetMixin {
 
     return Obx(
       () => BottomNavigationBar(
-        key: bottomNavKey,
         items: _navItemBuilder(navItems),
         showSelectedLabels: true,
         showUnselectedLabels: true,

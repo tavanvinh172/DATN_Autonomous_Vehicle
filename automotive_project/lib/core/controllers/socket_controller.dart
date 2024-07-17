@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:automotive_project/main.dart';
 import 'package:flutter/material.dart';
@@ -15,19 +17,37 @@ class SocketController extends GetxController {
   ].obs;
   final sensors = <String>[].obs;
   final listIp = <String>[].obs;
+  final base64Image = ''.obs;
   final joinDatas = [].obs;
   late VlcPlayerController vlcViewController;
   var isInitialized = false.obs;
   final ScrollController scrollController = ScrollController();
   Rx<Map<String, dynamic>> deviceInfor = Rx(<String, dynamic>{});
+  Image imageFromBase64String(String base64String) {
+    return Image.memory(base64Decode(base64String));
+  }
+
+  Uint8List dataFromBase64String(String base64String) {
+    return base64Decode(base64String);
+  }
+
+  String base64String(Uint8List data) {
+    return base64Encode(data);
+  }
+
   @override
   void onInit() {
     socket.connect();
     socket.on("infor", (data) {
-      print("infor: $data");
-      final jsonString = data.replaceFirst('detail:', '');
-      Map<String, dynamic> jsonObject = jsonDecode(jsonString);
-      deviceInfor.value = jsonObject;
+      print(data);
+      for (var element in jsonDecode(data.split(":")[1])) {
+        if (!listIp.contains(element)) {
+          listIp.add(element);
+        }
+      }
+      // final jsonString = data.replaceFirst('detail:', '');
+      // Map<String, dynamic> jsonObject = jsonDecode(jsonString);
+      // deviceInfor.value = jsonObject;
     });
 
     // lắng nghe sự kiện từ xe command
@@ -56,6 +76,12 @@ class SocketController extends GetxController {
     socket.on("join", (data) {
       print('join: $data');
     });
+
+    socket.on("frame", (data) {
+      print(data);
+      base64Image.value = data;
+      // print('frame2: ${data.split(":")[1]}');
+    });
     super.onInit();
   }
 
@@ -67,9 +93,9 @@ class SocketController extends GetxController {
   }
 
   void sendIP(String ip) async {
-    var command = "connect:$ip";
+    // var command = "connect:$ip";
     currentIp.value = ip;
-    socket.emit("vehicle command", command);
+    // socket.emit("vehicle command", command);
     joinRoom(currentIp.value);
   }
 
@@ -131,7 +157,7 @@ class SocketController extends GetxController {
 
   Future<void> scanVehicles() async {
     socket.emit("infor", "scan_vehicles");
-    onInfo();
+    // onInfo();
   }
 
   void onJoin() {
@@ -160,13 +186,7 @@ class SocketController extends GetxController {
 
   void onInfo() {
     socket.on("infor", (data) {
-      print("infor: $data");
       // print("runTimeType: ${}");
-      for (var element in jsonDecode(data.split(":")[1])) {
-        if (!listIp.contains(element)) {
-          listIp.add(element);
-        }
-      }
     });
   }
 

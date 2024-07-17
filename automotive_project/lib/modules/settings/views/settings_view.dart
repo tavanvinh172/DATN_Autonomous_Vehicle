@@ -86,17 +86,15 @@ class SettingsView extends BaseView<SettingsController> {
                           padding: EdgeInsets.symmetric(vertical: 15.0),
                           child: Text("Bạn có muốn đăng xuất không?"),
                         ),
-                        confirm: Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              sharePref.clear();
-                              Get.offAll(LoginView());
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                                side: BorderSide.none),
-                            child: const Text("Có"),
-                          ),
+                        confirm: ElevatedButton(
+                          onPressed: () {
+                            sharePref.clear();
+                            Get.offAll(LoginView());
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                              side: BorderSide.none),
+                          child: const Text("Có"),
                         ),
                         cancel: OutlinedButton(
                             onPressed: () => Get.back(),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:automotive_project/core/controllers/socket_controller.dart';
 import 'package:automotive_project/core/values/app_colors.dart';
 import 'package:automotive_project/core/values/app_theme.dart';
@@ -109,13 +111,27 @@ class DetailCars extends StatelessWidget {
                       const SizedBox(
                         height: 16,
                       ),
-                      VlcPlayer(
-                        controller: vlcViewController,
-                        aspectRatio: 16 / 9,
-                        placeholder: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                      // VlcPlayer(
+                      //   controller: vlcViewController,
+                      //   aspectRatio: 16 / 9,
+                      //   placeholder: const Center(
+                      //     child: CircularProgressIndicator(),
+                      //   ),
+                      // ),
+                      Container(
+                        width: size.width,
+                        height: size.height / 2.8,
+                        color: Colors.grey[300],
+                        child: socketController.base64Image.isEmpty
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Image.memory(
+                                gaplessPlayback: true,
+                                base64Decode(
+                                    socketController.base64Image.value)),
                       ),
+
                       const SizedBox(
                         height: 20,
                       ),
@@ -253,7 +269,7 @@ class DetailCars extends StatelessWidget {
                   }
                 },
                 style: ButtonStyle(
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6.0),
                       side: const BorderSide(
