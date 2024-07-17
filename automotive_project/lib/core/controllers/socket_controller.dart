@@ -1,23 +1,33 @@
 import 'dart:convert';
 
 import 'package:automotive_project/main.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:get/get.dart';
 
 class SocketController extends GetxController {
   final currentIp = "10.0.82.25".obs;
-
+  final dataSensors = [
+    [0, 0, 0, 0, 0]
+  ].obs;
+  final terminalDatas = [
+    [0, 0, 0, 0, 0]
+  ].obs;
   final sensors = <String>[].obs;
   final listIp = <String>[].obs;
   final joinDatas = [].obs;
   late VlcPlayerController vlcViewController;
   var isInitialized = false.obs;
-
+  final ScrollController scrollController = ScrollController();
+  Rx<Map<String, dynamic>> deviceInfor = Rx(<String, dynamic>{});
   @override
   void onInit() {
     socket.connect();
     socket.on("infor", (data) {
       print("infor: $data");
+      final jsonString = data.replaceFirst('detail:', '');
+      Map<String, dynamic> jsonObject = jsonDecode(jsonString);
+      deviceInfor.value = jsonObject;
     });
 
     // lắng nghe sự kiện từ xe command
@@ -32,9 +42,15 @@ class SocketController extends GetxController {
 
     // lắng nghe thông số từ sensor
     socket.on("sensor", (data) {
-      print(jsonDecode(data));
-      // sensors.addAll(jsonDecode(data));
-      // sensors.value = data;
+      dataSensors[0] = jsonDecode(data).cast<int>();
+      terminalDatas.add(jsonDecode(data).cast<int>());
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 500),
+        );
+      }
     });
 
     socket.on("join", (data) {

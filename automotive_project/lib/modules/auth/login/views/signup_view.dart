@@ -3,15 +3,14 @@ import 'dart:ui';
 import 'package:automotive_project/core/base/base_view.dart';
 import 'package:automotive_project/core/controllers/rive_animation.dart';
 import 'package:automotive_project/modules/auth/login/controllers/login_controller.dart';
-import 'package:automotive_project/modules/auth/login/views/signup_view.dart';
+import 'package:automotive_project/modules/auth/login/views/login_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
-class LoginView extends BaseView<LoginController> {
-  LoginView({super.key});
+class SignupView extends BaseView<LoginController> {
+  SignupView({super.key});
   final loginController = Get.put(LoginController());
   final riveController = Get.find<InitialRiveAnimation>();
   @override
@@ -41,7 +40,7 @@ class LoginView extends BaseView<LoginController> {
           child: Align(
             alignment: Alignment.center,
             child: Container(
-              height: screenHeight * .50 + 100,
+              height: screenHeight - 50,
               width: screenWidth,
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
@@ -55,7 +54,7 @@ class LoginView extends BaseView<LoginController> {
                 child: Column(
                   children: [
                     const Text(
-                      "Đăng nhập",
+                      "Đăng ký",
                       style: TextStyle(fontSize: 34, fontFamily: "Poppins"),
                     ),
                     Obx(
@@ -71,11 +70,14 @@ class LoginView extends BaseView<LoginController> {
                               padding:
                                   const EdgeInsets.only(top: 8.0, bottom: 16),
                               child: TextFormField(
-                                controller: loginController.usernameController,
+                                controller:
+                                    loginController.usernameSignupController,
                                 decoration: InputDecoration(
                                   focusedBorder: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
-                                      Radius.circular(16.0),
+                                      Radius.circular(
+                                        16.0,
+                                      ),
                                     ),
                                   ),
                                   border: const OutlineInputBorder(
@@ -85,14 +87,15 @@ class LoginView extends BaseView<LoginController> {
                                   ),
                                   errorText: loginController.isSubmit.value &&
                                           loginController
-                                              .usernameController.text.isEmpty
-                                      ? 'Tên đăng nhập không được bỏ trống'
+                                              .usernameSignupController
+                                              .text
+                                              .isEmpty
+                                      ? "Tên đăng nhập không được bỏ trống"
                                       : null,
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/email.svg"),
+                                  prefixIcon: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Icon(Icons.person),
                                   ),
                                 ),
                               ),
@@ -105,25 +108,116 @@ class LoginView extends BaseView<LoginController> {
                               padding:
                                   const EdgeInsets.only(top: 8.0, bottom: 16),
                               child: TextFormField(
-                                controller: loginController.passwordController,
+                                controller:
+                                    loginController.passwordSignupController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   focusedBorder: const OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(16.0))),
-                                  errorText: loginController.isSubmit.value &&
-                                          loginController
-                                              .usernameController.text.isEmpty
-                                      ? 'Mật khẩu không được bỏ trống'
-                                      : null,
                                   border: const OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(16.0))),
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/password.svg"),
+                                  errorText: loginController.isSubmit.value &&
+                                          loginController
+                                              .passwordSignupController
+                                              .text
+                                              .isEmpty
+                                      ? 'Mật khẩu không được bỏ trống'
+                                      : null,
+                                  prefixIcon: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Icon(Icons.password),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              "Nhập tên hiển thị:",
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 16),
+                              child: TextFormField(
+                                controller:
+                                    loginController.displayNameController,
+                                decoration: InputDecoration(
+                                  focusedBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  errorText: loginController.isSubmit.value &&
+                                          loginController.displayNameController
+                                              .text.isEmpty
+                                      ? 'Tên hiển thị không được bỏ trống'
+                                      : null,
+                                  prefixIcon: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Icon(Icons.person),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              "Nhập Email:",
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 16),
+                              child: TextFormField(
+                                controller: loginController.emailController,
+                                decoration: InputDecoration(
+                                  focusedBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  errorText: loginController.isSubmit.value &&
+                                          loginController
+                                              .emailController.text.isEmpty
+                                      ? 'Email không được bỏ trống'
+                                      : null,
+                                  prefixIcon: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Icon(Icons.email),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              "Nhập số điện thoại:",
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 16),
+                              child: TextFormField(
+                                controller:
+                                    loginController.phoneNumberController,
+                                decoration: InputDecoration(
+                                  focusedBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(16.0))),
+                                  errorText: loginController.isSubmit.value &&
+                                          loginController.phoneNumberController
+                                              .text.isEmpty
+                                      ? 'Số điện thoại không được bỏ trống'
+                                      : null,
+                                  prefixIcon: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Icon(Icons.phone),
                                   ),
                                 ),
                               ),
@@ -132,7 +226,7 @@ class LoginView extends BaseView<LoginController> {
                               padding:
                                   const EdgeInsets.only(top: 8.0, bottom: 24),
                               child: ElevatedButton.icon(
-                                onPressed: () => loginController.login(),
+                                onPressed: () => loginController.signup(),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFF77D8E),
                                     minimumSize:
@@ -147,7 +241,7 @@ class LoginView extends BaseView<LoginController> {
                                   CupertinoIcons.arrow_right,
                                   color: Color(0xFFFE0037),
                                 ),
-                                label: const Text("Đăng nhập"),
+                                label: const Text("Đăng ký"),
                               ),
                             ),
                           ],
@@ -161,14 +255,14 @@ class LoginView extends BaseView<LoginController> {
           ),
         ),
         Positioned(
-          top: screenHeight / 1.42,
+          top: screenHeight - 70,
           left: screenWidth / 1.4,
           child: GestureDetector(
             onTap: () {
-              Get.to(SignupView());
+              Get.to(() => LoginView());
             },
             child: const Text(
-              "Đăng ký",
+              "Đăng nhập",
               style: TextStyle(
                 color: Colors.blueAccent,
                 fontSize: 16,

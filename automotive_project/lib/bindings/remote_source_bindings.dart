@@ -8,6 +8,7 @@ class RemoteSourceBindings implements Bindings {
     Get.lazyPut<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(),
       tag: (AuthRemoteDataSource).toString(),
+      fenix: true,
     );
   }
 }

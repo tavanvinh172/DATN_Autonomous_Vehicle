@@ -25,33 +25,19 @@ class HomeController extends BaseController
   var isInitialized = false.obs;
   var isPowerOn = false.obs;
   var isVlcplayerInitialized = false.obs;
-  final data = [
-    [20, 54, 21, 43, 54]
-  ].obs;
-  final terminalDatas = [
-    [20, 54, 21, 43, 54]
-  ].obs;
   final nameDeviceController = TextEditingController();
   final ipAddressController = TextEditingController();
   final portController = TextEditingController();
   final isSubmit = false.obs;
   late Timer timer;
-  final ScrollController scrollController = ScrollController();
   @override
   void onInit() async {
     ipAdress.value = (await getCurrentIpAddress())!;
     isInitialized.value = true;
-    timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      data[0] = generateRandomList(5);
-      terminalDatas.add(generateRandomList(5));
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 500),
-        );
-      }
-    });
+    // timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    //   data[0] = generateRandomList(5);
+    //   terminalDatas.add(generateRandomList(5));
+    // });
     super.onInit();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:automotive_project/bindings/initial_binding.dart';
 import 'package:automotive_project/core/values/app_colors.dart';
 import 'package:automotive_project/data/local/db/object_box.dart';
@@ -6,6 +8,7 @@ import 'package:automotive_project/data/local/preference/preference_manager_impl
 import 'package:automotive_project/flavors/build_config.dart';
 import 'package:automotive_project/flavors/env_config.dart';
 import 'package:automotive_project/flavors/environment.dart';
+import 'package:automotive_project/network/http_override.dart';
 import 'package:automotive_project/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,7 +28,7 @@ void main() async {
     baseUrl: "http://localhost:7000",
     shouldCollectCrashLog: true,
   );
-
+  HttpOverrides.global = MyHttpOverrides();
   BuildConfig.instantiate(
     envType: Environment.DEVELOPMENT,
     envConfig: devConfig,
@@ -48,7 +51,6 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
         future: _preferenceManager.getString(PreferenceManager.keyToken),
         builder: (context, snapshot) {
-          _preferenceManager.setString(PreferenceManager.keyToken, "fwefwef");
           if (snapshot.connectionState == ConnectionState.done) {
             return GetMaterialApp(
               title: _envConfig.appName,

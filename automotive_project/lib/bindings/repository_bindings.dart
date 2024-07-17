@@ -5,9 +5,7 @@ import 'package:get/get.dart';
 class RepositoryBindings implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AuthRepository>(
-      () => AuthRepositoryImpl(),
-      tag: (AuthRepository).toString(),
-    );
+    Get.lazyPut<AuthRepository>(() => AuthRepositoryImpl(),
+        tag: (AuthRepository).toString(), fenix: true);
   }
 }

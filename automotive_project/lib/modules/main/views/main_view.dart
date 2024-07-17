@@ -4,6 +4,7 @@ import 'package:automotive_project/core/base/base_view.dart';
 import 'package:automotive_project/core/values/app_colors.dart';
 import 'package:automotive_project/core/values/app_theme.dart';
 import 'package:automotive_project/core/widget/show_toast_message.dart';
+import 'package:automotive_project/core/widget/text_field_with_title.dart';
 import 'package:automotive_project/data/model/devices/device.dart';
 import 'package:automotive_project/main.dart';
 import 'package:automotive_project/modules/home/widgets/car_card.dart';
@@ -77,7 +78,7 @@ class MainView extends BaseView<MainController> {
         ),
         body: TabBarView(
           children: [
-            const SettingsView(),
+            SettingsView(),
             _buildVehicleTab(size),
           ],
         ),
@@ -194,12 +195,62 @@ class MainView extends BaseView<MainController> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          // if (nameDeviceController.text.isNotEmpty &&
-                          //     ipAddressController.text.isNotEmpty &&
-                          //     portController.text.isNotEmpty) {
-                          //   objectbox.editDevice(id, nameDeviceController.text,
-                          //       ipAddressController.text, portController.text);
-                          // }
+                          Get.defaultDialog(
+                            title: "Thêm mới thiết bị",
+                            titleStyle: const TextStyle(fontSize: 20),
+                            content: Container(
+                                width: 500,
+                                height: 150,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 15.0),
+                                child: Column(
+                                  children: [
+                                    TextFieldWithTitle(
+                                      textEditingController:
+                                          TextEditingController(text: ""),
+                                      title: 'Địa chỉ IP',
+                                    ),
+                                  ],
+                                )),
+                            confirm: Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // if (nameDeviceController.text.isNotEmpty &&
+                                  //     ipAddressController.text.isNotEmpty &&
+                                  //     portController.text.isNotEmpty) {
+                                  //   objectbox.editDevice(id, nameDeviceController.text,
+                                  //       ipAddressController.text, portController.text);
+                                  // }
+                                },
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      side: const BorderSide(
+                                        color: AppColors.colorDark,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                child: const Text("Thêm mới"),
+                              ),
+                            ),
+                            cancel: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: WidgetStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      side: const BorderSide(
+                                        color: AppColors.colorDark,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () => Get.back(),
+                                child: const Text("Huỷ")),
+                          );
                         },
                         style: ButtonStyle(
                           shape:
