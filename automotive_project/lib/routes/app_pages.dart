@@ -4,7 +4,6 @@ import 'package:automotive_project/modules/favorite/bindings/favorite_binding.da
 import 'package:automotive_project/modules/favorite/views/favorite_view.dart';
 import 'package:automotive_project/modules/home/bindings/home_binding.dart';
 import 'package:automotive_project/modules/home/views/home_details.dart';
-import 'package:automotive_project/modules/home/views/home_view.dart';
 import 'package:automotive_project/modules/main/bindings/main_binding.dart';
 import 'package:automotive_project/modules/main/views/main_view.dart';
 import 'package:automotive_project/modules/onboarding/bindings/onboarding_binding.dart';
@@ -37,11 +36,11 @@ class AppPages {
       page: () => MainView(),
       binding: MainBinding(),
     ),
-    GetPage(
-      name: _Paths.HOME,
-      page: () => HomeView(),
-      binding: HomeBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.HOME,
+    //   page: () => HomeView(),
+    //   binding: HomeBinding(),
+    // ),
     GetPage(
       name: _Paths.HOME_DETAILS,
       page: () => DetailCars(),

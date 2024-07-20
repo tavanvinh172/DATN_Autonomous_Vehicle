@@ -21,6 +21,7 @@ class DetailCars extends StatelessWidget {
   final portController = TextEditingController();
   final socketController = Get.put(SocketController());
   late VlcPlayerController vlcViewController;
+  final homeController = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -34,6 +35,7 @@ class DetailCars extends StatelessWidget {
             ipAddressController.text = device.ipAddress;
             portController.text = device.port ?? "";
             socketController.sendIP(device.ipAddress);
+            socketController.switchMode(Mode.mannual.value);
             // socketController.initSocket();
             socketController.isInitialized.value = true;
             vlcViewController = VlcPlayerController.network(
@@ -50,7 +52,7 @@ class DetailCars extends StatelessWidget {
                 // backgroundColor: AppColors.lightGreyColor.withOpacity(.1),
                 centerTitle: true,
                 title: Text(
-                  'Chi tiết',
+                  objectbox.getDeviceById(Get.arguments['id']).ipAddress,
                   style: MyThemes.textTheme.titleLarge!,
                 ),
                 actions: [
@@ -87,7 +89,8 @@ class DetailCars extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: DropdownMenu(
                           initialSelection:
-                              socketController.deviceInfor.value['mode'],
+                              socketController.deviceInfor.value['mode'] ??
+                                  'mannual',
                           label: Text(
                             'Chế độ',
                             style: MyThemes.textTheme.titleMedium,
@@ -95,7 +98,7 @@ class DetailCars extends StatelessWidget {
                           dropdownMenuEntries: Mode.values.map(
                             (value) {
                               return DropdownMenuEntry(
-                                value: value,
+                                value: value.value,
                                 label: value.label,
                                 style: MenuItemButton.styleFrom(
                                   backgroundColor: AppColors.appBarColor,
@@ -104,7 +107,7 @@ class DetailCars extends StatelessWidget {
                             },
                           ).toList(),
                           onSelected: (value) {
-                            // socketController.switchMode(value!.value);
+                            socketController.switchMode(value.toString());
                           },
                         ),
                       ),
@@ -251,6 +254,7 @@ class DetailCars extends StatelessWidget {
           TextFieldWithTitle(
             textEditingController: ipAddressController,
             title: 'Địa chỉ IP',
+            isSubmit: homeController.isSubmit,
           ),
           // TextFieldWithTitle(
           //   textEditingController: portController,
@@ -261,9 +265,7 @@ class DetailCars extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  if (nameDeviceController.text.isNotEmpty &&
-                      ipAddressController.text.isNotEmpty &&
-                      portController.text.isNotEmpty) {
+                  if (ipAddressController.text.isNotEmpty) {
                     objectbox.editDevice(id, nameDeviceController.text,
                         ipAddressController.text, portController.text);
                   }

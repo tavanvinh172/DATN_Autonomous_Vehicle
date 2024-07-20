@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:automotive_project/core/base/base_view.dart';
+import 'package:automotive_project/core/controllers/netword_controller.dart';
 import 'package:automotive_project/core/values/app_colors.dart';
 import 'package:automotive_project/core/values/app_theme.dart';
 import 'package:automotive_project/core/widget/show_toast_message.dart';
@@ -23,7 +24,7 @@ class MainView extends BaseView<MainController> {
   @override
   final controller = Get.find<MainController>();
   final socketController = Get.put(SocketController());
-
+  final networkController = Get.find<NetworkController>();
   @override
   PreferredSizeWidget? appBar(BuildContext context) => null;
 
@@ -114,20 +115,22 @@ class MainView extends BaseView<MainController> {
                     const SizedBox(
                       width: 10,
                     ),
-                    RichText(
-                      text: TextSpan(
-                        text: "Tìm kiếm\n",
-                        style: MyThemes.textTheme.bodySmall!.copyWith(
-                          color: AppColors.appBarColor,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Bật',
-                            style: MyThemes.textTheme.bodySmall!.copyWith(
-                              color: AppColors.colorPrimary,
-                            ),
+                    Obx(
+                      () => RichText(
+                        text: TextSpan(
+                          text: "Tìm kiếm\n",
+                          style: MyThemes.textTheme.bodySmall!.copyWith(
+                            color: AppColors.appBarColor,
                           ),
-                        ],
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: controller.pingStatus.value ? 'Bật' : 'Tắt',
+                              style: MyThemes.textTheme.bodySmall!.copyWith(
+                                color: AppColors.colorPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -150,7 +153,9 @@ class MainView extends BaseView<MainController> {
                         ),
                         children: <TextSpan>[
                           TextSpan(
-                            text: 'Trực tuyến',
+                            text: networkController.isHavingConnection.value
+                                ? 'Trực tuyến'
+                                : 'Ngoại tuyến',
                             style: MyThemes.textTheme.bodySmall!.copyWith(
                               color: AppColors.colorPrimary,
                             ),
@@ -209,11 +214,14 @@ class MainView extends BaseView<MainController> {
                                       textEditingController: controller
                                           .homeController.ipAddressController,
                                       title: 'Địa chỉ IP',
+                                      isSubmit:
+                                          controller.homeController.isSubmit,
                                     ),
                                   ],
                                 )),
                             confirm: ElevatedButton(
                               onPressed: () {
+                                controller.homeController.isSubmit(true);
                                 // if (nameDeviceController.text.isNotEmpty &&
                                 //     ipAddressController.text.isNotEmpty &&
                                 //     portController.text.isNotEmpty) {
@@ -229,6 +237,7 @@ class MainView extends BaseView<MainController> {
                                       '5000');
                                   Get.back();
                                 }
+                                controller.homeController.isSubmit(false);
                               },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
@@ -388,8 +397,7 @@ class MainView extends BaseView<MainController> {
               controller.pingStatus.value = !controller.pingStatus.value;
               if (controller.scanDetection.value) {
                 await socketController.scanVehicles();
-                Timer(const Duration(seconds: 2), () {
-                  print('listId: ${socketController.listIp}');
+                Timer(const Duration(seconds: 1), () {
                   if (socketController.listIp.isNotEmpty) {
                     showToastSuccessMessage("Thông báo",
                         "Dò được ${socketController.listIp.length} thiết bị");

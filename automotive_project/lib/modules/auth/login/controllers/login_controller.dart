@@ -4,7 +4,7 @@ import 'package:automotive_project/core/base/base_controller.dart';
 import 'package:automotive_project/core/widget/show_toast_message.dart';
 import 'package:automotive_project/data/local/preference/preference_manager.dart';
 import 'package:automotive_project/data/repository/auth/auth_repository.dart';
-import 'package:automotive_project/routes/app_pages.dart';
+import 'package:automotive_project/modules/main/views/main_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +33,6 @@ class LoginController extends BaseController
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-
     offsetAnimation = Tween<Offset>(
       begin: const Offset(0.0, -2),
       end: Offset.zero,
@@ -48,6 +47,13 @@ class LoginController extends BaseController
   @override
   void dispose() {
     controller.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    usernameSignupController.dispose();
+    passwordSignupController.dispose();
+    displayNameController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -67,7 +73,7 @@ class LoginController extends BaseController
             PreferenceManager.userStore, jsonEncode(response['data']['User']));
         sharePref.setString(
             PreferenceManager.keyToken, response['data']['User']['token']);
-        Get.offAllNamed(Routes.MAIN);
+        Get.offAll(() => MainView());
       }
       isSubmit.value = true;
     }

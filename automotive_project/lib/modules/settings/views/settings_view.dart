@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:automotive_project/core/base/base_view.dart';
 import 'package:automotive_project/core/values/app_colors.dart';
 import 'package:automotive_project/data/local/preference/preference_manager.dart';
-import 'package:automotive_project/modules/auth/login/views/login_view.dart';
 import 'package:automotive_project/modules/settings/controllers/settings_controller.dart';
 import 'package:automotive_project/modules/settings/widget/profile_menu_widget.dart';
+import 'package:automotive_project/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +13,7 @@ class SettingsView extends BaseView<SettingsController> {
   SettingsView({super.key});
   final sharePref =
       Get.find<PreferenceManager>(tag: (PreferenceManager).toString());
-  final settingController = Get.find<SettingsController>();
+  final settingController = Get.put(SettingsController());
   @override
   PreferredSizeWidget? appBar(BuildContext context) {
     return null;
@@ -86,14 +86,11 @@ class SettingsView extends BaseView<SettingsController> {
                           padding: EdgeInsets.symmetric(vertical: 15.0),
                           child: Text("Bạn có muốn đăng xuất không?"),
                         ),
-                        confirm: ElevatedButton(
+                        confirm: OutlinedButton(
                           onPressed: () {
                             sharePref.clear();
-                            Get.offAll(LoginView());
+                            Get.offAllNamed(Routes.LOGIN);
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.redAccent,
-                              side: BorderSide.none),
                           child: const Text("Có"),
                         ),
                         cancel: OutlinedButton(
